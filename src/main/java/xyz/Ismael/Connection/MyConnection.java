@@ -28,6 +28,8 @@ public class MyConnection {
     var connection = MyConnection.getConnection();
     if(connection != null){
       System.out.println("SUCCESS Connection: " + connection);
+    } else {
+      System.out.println("Error in connection");
     }
   }
 }
