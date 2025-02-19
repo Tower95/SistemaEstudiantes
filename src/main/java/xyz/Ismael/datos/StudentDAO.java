@@ -5,6 +5,7 @@ import xyz.Ismael.dominio.Student;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,11 +51,57 @@ public class StudentDAO {
     return students;
   }
 
+  public boolean findById(Student student ){
+    PreparedStatement ps;
+    ResultSet rs;
+    Connection con = getConnection();
+
+    String sql = "SELECT * FROM estudiante WHERE id_estudiante = ?";
+    try {
+
+      ps = con.prepareStatement(sql);
+      ps.setInt(1,student.getIdEstudiante());
+      rs = ps.executeQuery();
+
+      if(rs.next()){
+        student.setNombre(rs.getString("nombre"));
+        student.setApellido(rs.getString("apellido"));
+        student.setEmail(rs.getString("email"));
+        student.setTelefono(rs.getString("telefono"));
+        return true;
+
+      }
+
+    }  catch (Exception e){
+      System.out.println("Has occurred and Error: " + e.getMessage());
+    }// end execute query
+
+    finally {
+      try {
+
+        con.close();
+      } catch (Exception e){
+        System.out.println("Has occured and Error close connection: " + e.getMessage());
+      }
+    } // end finally
+
+    return  false;
+  }
+
   public static void main(String[] args) {
-    var studentsDAO = new StudentDAO();
+    var studentDAO = new StudentDAO();
     // lists studebts
     System.out.println("Student List: ");
-    List<Student> students = studentsDAO.lists();
+    List<Student> students = studentDAO.lists();
     students.forEach(System.out::println);
+
+    // search by id
+    var student = new Student(2);
+    var finded = studentDAO.findById(student);
+    if(finded){
+      System.out.println("I find the next student:");
+      System.out.println(student.toString());
+    }
+
   }
 }
