@@ -2,10 +2,7 @@ package xyz.Ismael.datos;
 
 import xyz.Ismael.dominio.Student;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Struct;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,13 +92,60 @@ public class StudentDAO {
     List<Student> students = studentDAO.lists();
     students.forEach(System.out::println);
 
-    // search by id
-    var student = new Student(2);
-    var finded = studentDAO.findById(student);
-    if(finded){
-      System.out.println("I find the next student:");
-      System.out.println(student.toString());
+    /* Add student */
+    var newStudent = new Student("Dania","Rocha", "12345","DaniaMoxxita@mail.com");
+    var added = studentDAO.addStudent(newStudent);
+    if(added){
+      System.out.println("new student was added SUCCESFULLY");
+    }else {
+      System.out.println("can't add the new student FAILURE");
     }
 
+    /* search by id */
+//    var student = new Student(2);
+//    var finded = studentDAO.findById(student);
+//    if(finded){
+//      System.out.println("I find the next student:");
+//      System.out.println(student.toString());
+//    }
+
+  }
+
+  public boolean addStudent (Student student){
+
+    boolean result = false;
+
+    PreparedStatement ps;
+    Connection con = getConnection();
+    String sql = "INSERT INTO estudiante (nombre, apellido, telefono, email)"+
+                  " VALUES (?, ?, ?, ?)";
+
+    try {
+      ps = con.prepareStatement(sql);
+
+      /* set parameters */
+      ps.setString(1,student.getNombre());
+      ps.setString(2,student.getApellido());
+      ps.setString(3,student.getTelefono());
+      ps.setString(4,student.getEmail());
+      ps.execute();
+      result = true;
+
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+      throw new RuntimeException(e);
+    } // end try catch
+
+    finally {
+      try {
+        con.close();
+      } catch (SQLException e) {
+        System.out.println("Error: Can't close connection! ");
+        System.out.println(e.getMessage());
+        throw new RuntimeException(e);
+      }
+    }
+
+    return result;
   }
 }
