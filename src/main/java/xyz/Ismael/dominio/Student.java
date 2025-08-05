@@ -45,12 +45,9 @@ public class Student {
     this.email = email;
 
   }
-
   // End Constructors
 
   // GETTERS SETTERS
-
-
   public int getIdEstudiante() {
     return idEstudiante;
   }
