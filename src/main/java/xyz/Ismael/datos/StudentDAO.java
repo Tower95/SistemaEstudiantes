@@ -86,6 +86,7 @@ public class StudentDAO {
   }
 
   public boolean patchStudent(Student studentMod) {
+
     int idStudent = studentMod.getIdEstudiante();
     PreparedStatement ps;
     ResultSet rs;
@@ -97,10 +98,13 @@ public class StudentDAO {
             "telefono = ?," +
             "email = ?" +
             "WHERE id_estudiante = ? ;";
+
     System.out.println(sqlSentence);
+
     if (idStudent > 0) {
 
       try {
+
         ps = con.prepareStatement(sqlSentence);
         ps.setString(1, studentMod.getNombre());
         ps.setString(2, studentMod.getApellido());
@@ -112,15 +116,21 @@ public class StudentDAO {
         return true;
 
       } catch (SQLException e) {
+
         System.out.println(e.getMessage());
         throw new RuntimeException(e);
+
       } finally {
         try {
+
           con.close();
+
         } catch (SQLException e) {
+
           System.out.println("Error: Can't close connection! ");
           System.out.println(e.getMessage());
           throw new RuntimeException(e);
+
         }
       }
 
@@ -132,24 +142,32 @@ public class StudentDAO {
   public static void main(String[] args) {
     var studentDAO = new StudentDAO();
 
+    // remove student
+    var student = new Student(9);
+    var mod = studentDAO.findById(student);
+    if (mod) {
+      studentDAO.deleteStudent(student) ;
+    }
     // lists studebts
     System.out.println("Student List: ");
     List<Student> students = studentDAO.lists();
     students.forEach(System.out::println);
 
-    // Mod Student
-    var student = new Student(1);
-    var mod = studentDAO.findById(student);
-    if (mod) {
-      student.setNombre("Ismael");
-      student.setApellido("Martinez");
-      student.setTelefono("64134321");
-      student.setEmail("torrestni@gmail.com");
 
-      studentDAO.patchStudent(student);
-      System.out.println("Student with id : " + 1);
-      System.out.println(student.toString());
-    }
+
+    // Mod Student
+//    var student = new Student(1);
+//    var mod = studentDAO.findById(student);
+//    if (mod) {
+//      student.setNombre("Ismael");
+//      student.setApellido("Martinez");
+//      student.setTelefono("64134321");
+//      student.setEmail("torrestni@gmail.com");
+//
+//      studentDAO.patchStudent(student);
+//      System.out.println("Student with id : " + 1);
+//      System.out.println(student.toString());
+//    }
     /* Add student */
 
 //    var newStudent = new Student("Daniel","Siqueiroz", "12345","Danielauditore@mail.com");
@@ -204,6 +222,45 @@ public class StudentDAO {
         throw new RuntimeException(e);
       }
     }
+
+    return result;
+  }
+
+  public boolean deleteStudent(Student student){
+
+    var result = false;
+
+    Connection con = getConnection();
+    PreparedStatement ps;
+    String sql = "DELETE FROM estudiante " +
+                "WHERE id_estudiante = ?;";
+
+    try {
+      ps = con.prepareStatement(sql);
+
+      /* set parameters */
+      ps.setInt(1, student.getIdEstudiante());
+      ps.execute();
+      System.out.println("The student wiht id : " + student.getIdEstudiante()+
+              " was deleted\n");
+      System.out.println(student);
+      result = true;
+
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+      throw new RuntimeException(e);
+    } // end try catch
+
+    finally {
+      try {
+        con.close();
+      } catch (SQLException e) {
+        System.out.println("Error: Can't close connection! ");
+        System.out.println(e.getMessage());
+        throw new RuntimeException(e);
+      }
+    }
+
 
     return result;
   }
