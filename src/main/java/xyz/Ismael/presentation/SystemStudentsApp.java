@@ -52,7 +52,8 @@ public class SystemStudentsApp {
       switch (option) {
 
         case 1:
-          System.out.println(studentsDAO.lists());
+          var students = studentsDAO.lists();
+          students.forEach(System.out::println);
           break;
 
         case 2:
