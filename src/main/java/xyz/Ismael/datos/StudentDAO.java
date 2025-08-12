@@ -9,6 +9,7 @@ import java.util.List;
 import static xyz.Ismael.Connection.MyConnection.getConnection;
 
 public class StudentDAO {
+
   public List<Student> lists() {
     List<Student> students = new ArrayList<>();
     PreparedStatement ps;
@@ -98,8 +99,6 @@ public class StudentDAO {
             "telefono = ?," +
             "email = ?" +
             "WHERE id_estudiante = ? ;";
-
-    System.out.println(sqlSentence);
 
     if (idStudent > 0) {
 

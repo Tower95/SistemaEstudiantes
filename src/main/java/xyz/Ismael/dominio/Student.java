@@ -97,6 +97,6 @@ public class Student {
             ", apellido='" + apellido + '\'' +
             ", telefono='" + telefono + '\'' +
             ", email='" + email + '\'' +
-            '}';
+            "}\n";
   }
 }
